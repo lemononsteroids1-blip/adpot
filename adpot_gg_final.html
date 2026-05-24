@@ -1,0 +1,348 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{background:#09090B;color:#FAFAFA;font-family:'Space Mono',monospace;min-height:720px;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;}
+.page{position:absolute;inset:0;transition:opacity .35s,transform .35s;will-change:opacity,transform;}
+.page.hidden{opacity:0;pointer-events:none;transform:translateX(18px);}
+.page.visible{opacity:1;pointer-events:all;transform:translateX(0);}
+.ambient{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.05) 0%,transparent 65%);top:38%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:amb 5s ease-in-out infinite;}
+@keyframes amb{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7;}50%{transform:translate(-50%,-50%) scale(1.08);opacity:1;}}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:22px 36px;position:relative;z-index:20;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#FAFAFA;text-shadow:0 0 22px rgba(168,85,247,.55);cursor:pointer;}
+.logo em{color:#A855F7;font-style:normal;}
+.profile-pill{display:flex;align-items:center;gap:9px;background:rgba(17,17,19,.9);border:1px solid rgba(168,85,247,.18);border-radius:50px;padding:6px 16px 6px 6px;cursor:pointer;transition:border-color .25s,box-shadow .25s;user-select:none;}
+.profile-pill:hover{border-color:rgba(168,85,247,.5);box-shadow:0 0 16px rgba(168,85,247,.12);}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.pname{font-size:11px;letter-spacing:.5px;color:#FAFAFA;}
+
+.hero{text-align:center;padding:14px 36px 0;position:relative;z-index:10;}
+.pot-eyebrow{font-size:9px;letter-spacing:5px;color:rgba(168,85,247,.6);text-transform:uppercase;margin-bottom:10px;}
+.pot-num{font-family:'Bebas Neue',sans-serif;font-size:104px;line-height:1;color:#FAFAFA;letter-spacing:-2px;text-shadow:0 0 90px rgba(168,85,247,.3),0 0 180px rgba(168,85,247,.1);}
+.pot-sub{display:flex;justify-content:center;gap:40px;margin-top:14px;}
+.psi{text-align:center;}
+.psiv{font-size:11px;color:#A855F7;font-weight:700;letter-spacing:.5px;}
+.psil{font-size:9px;color:rgba(161,161,170,.5);margin-top:3px;letter-spacing:1px;text-transform:uppercase;}
+
+.reel-outer{margin:22px auto 0;max-width:580px;position:relative;z-index:10;padding:0 36px;}
+.reel-wrap{background:#0D0D0F;border:1px solid rgba(255,255,255,.05);border-radius:12px;overflow:hidden;position:relative;height:104px;}
+.fade-l,.fade-r{position:absolute;top:0;bottom:0;width:90px;z-index:3;pointer-events:none;}
+.fade-l{left:0;background:linear-gradient(to right,#0D0D0F 35%,transparent);}
+.fade-r{right:0;background:linear-gradient(to left,#0D0D0F 35%,transparent);}
+.sel{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:104px;z-index:2;pointer-events:none;border-left:1px solid rgba(168,85,247,.45);border-right:1px solid rgba(168,85,247,.45);}
+.sel::after{content:'';position:absolute;inset:0;background:rgba(168,85,247,.04);animation:selp 2.5s ease-in-out infinite;}
+@keyframes selp{0%,100%{background:rgba(168,85,247,.04);}50%{background:rgba(168,85,247,.08);}}
+.track{display:flex;align-items:center;height:100%;will-change:transform;}
+.ri{flex-shrink:0;width:104px;height:104px;display:flex;align-items:center;justify-content:center;padding:9px;}
+.ri img{width:86px;height:86px;object-fit:contain;border-radius:10px;}
+
+.spin-area{text-align:center;margin-top:20px;position:relative;z-index:10;}
+.spin-btn{background:transparent;border:1px solid rgba(168,85,247,.4);color:#FAFAFA;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;padding:14px 48px;border-radius:50px;cursor:pointer;text-transform:uppercase;transition:border-color .25s,box-shadow .25s,transform .1s;position:relative;}
+.spin-btn::before{content:'';position:absolute;inset:0;border-radius:50px;background:rgba(168,85,247,.07);opacity:0;transition:opacity .25s;}
+.spin-btn:hover::before{opacity:1;}
+.spin-btn:hover{border-color:rgba(168,85,247,.75);box-shadow:0 0 24px rgba(168,85,247,.15);}
+.spin-btn:active{transform:scale(.97);}
+.spin-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none;}
+.shint{font-size:9px;color:rgba(161,161,170,.4);margin-top:9px;letter-spacing:1px;}
+.result{display:none;margin:12px auto 0;padding:8px 28px;border-radius:50px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;width:fit-content;}
+.result.lose{display:block;color:rgba(161,161,170,.45);border:1px solid rgba(161,161,170,.1);}
+.result.win{display:block;color:#A855F7;border:1px solid rgba(168,85,247,.5);box-shadow:0 0 32px rgba(168,85,247,.3);animation:wf .6s ease-in-out 4;}
+@keyframes wf{0%,100%{opacity:1;}50%{opacity:.1;}}
+
+.drops{margin:22px 36px 0;position:relative;z-index:10;}
+.drops-lbl{font-size:9px;letter-spacing:4px;color:rgba(161,161,170,.35);text-transform:uppercase;text-align:center;margin-bottom:12px;}
+.drops-row{display:flex;gap:10px;}
+.dc{flex:1;background:#0D0D0F;border:1px solid rgba(255,255,255,.05);border-radius:12px;display:flex;align-items:center;gap:12px;padding:12px 16px;transition:border-color .2s;}
+.dc:hover{border-color:rgba(255,255,255,.09);}
+.dc img{width:66px;height:66px;object-fit:contain;border-radius:9px;flex-shrink:0;}
+.dcinfo{}
+.dcname{font-size:9px;color:rgba(161,161,170,.5);letter-spacing:2px;text-transform:uppercase;}
+.dcpct{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin-top:1px;}
+.dcpct.tnt{color:#ef4444;}
+.dcpct.jp{color:#f59e0b;}
+.dcsub{font-size:9px;color:rgba(161,161,170,.3);letter-spacing:1px;margin-top:2px;text-transform:uppercase;}
+
+.profile-page{background:#09090B;z-index:30;overflow-y:auto;}
+.prof-nav{display:flex;align-items:center;gap:16px;padding:22px 36px;position:relative;z-index:10;}
+.back-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:50px;padding:7px 14px;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;color:rgba(161,161,170,.7);letter-spacing:1px;transition:all .2s;}
+.back-btn:hover{border-color:rgba(168,85,247,.4);color:#FAFAFA;}
+.prof-body{padding:8px 36px 36px;}
+.prof-header{display:flex;align-items:center;gap:18px;margin-bottom:28px;}
+.prof-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0;border:2px solid rgba(168,85,247,.3);}
+.prof-name{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#FAFAFA;}
+.prof-tag{font-size:9px;color:#A855F7;letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.prof-card{background:#0D0D0F;border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:16px 18px;}
+.prof-card-val{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:#FAFAFA;}
+.prof-card-val.purple{color:#A855F7;}
+.prof-card-val.gold{color:#f59e0b;}
+.prof-card-lbl{font-size:9px;color:rgba(161,161,170,.45);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.prof-card-sub{font-size:9px;color:rgba(161,161,170,.3);margin-top:2px;}
+.prof-section-label{font-size:9px;letter-spacing:4px;color:rgba(161,161,170,.35);text-transform:uppercase;margin-bottom:10px;}
+.ref-box{background:#0D0D0F;border:1px solid rgba(168,85,247,.15);border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .25s;}
+.ref-box:hover{border-color:rgba(168,85,247,.45);}
+.ref-url{font-size:11px;color:#A855F7;}
+.ref-copy{font-size:9px;color:rgba(161,161,170,.45);letter-spacing:2px;}
+.streak-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.streak-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+.streak-bar{height:100%;background:#A855F7;border-radius:2px;transition:width .8s ease;}
+.streak-label{font-size:10px;color:#A855F7;font-weight:700;white-space:nowrap;}
+</style>
+
+<div class="root" id="root">
+  <div class="ambient"></div>
+
+  <div class="page visible" id="home-page">
+    <nav class="nav">
+      <div class="logo" onclick="goHome()">adpot<em>.gg</em></div>
+      <div class="profile-pill" onclick="goProfile()">
+        <div class="av">SL</div>
+        <span class="pname">slugmaster</span>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="pot-eyebrow">jackpot</div>
+      <div class="pot-num" id="pot">$0</div>
+      <div class="pot-sub">
+        <div class="psi"><div class="psiv">0.02%</div><div class="psil">Win Chance</div></div>
+        <div class="psi"><div class="psiv" id="cd">23:59:59</div><div class="psil">Next Draw</div></div>
+        <div class="psi"><div class="psiv">+$10</div><div class="psil">Daily</div></div>
+      </div>
+    </section>
+
+    <div class="reel-outer">
+      <div class="reel-wrap">
+        <div class="fade-l"></div>
+        <div class="fade-r"></div>
+        <div class="sel"></div>
+        <div class="track" id="track">
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/jackpot-spin.webp" alt="Jackpot"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/jackpot-spin.webp" alt="Jackpot"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/jackpot-spin.webp" alt="Jackpot"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/jackpot-spin.webp" alt="Jackpot"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+          <div class="ri"><img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spin-area">
+      <button class="spin-btn" id="sbtn" onclick="doSpin()">Watch Ad to Spin</button>
+      <div class="shint" id="shint">1 spin available today</div>
+      <div class="result" id="result"></div>
+    </div>
+
+    <div class="drops">
+      <div class="drops-lbl">Potential Drops</div>
+      <div class="drops-row">
+        <div class="dc">
+          <img src="/mnt/user-data/uploads/tnt-spin.webp" alt="TNT">
+          <div class="dcinfo">
+            <div class="dcname">TNT</div>
+            <div class="dcpct tnt">99.98%</div>
+            <div class="dcsub">No win</div>
+          </div>
+        </div>
+        <div class="dc">
+          <img src="/mnt/user-data/uploads/jackpot-spin.webp" alt="Jackpot">
+          <div class="dcinfo">
+            <div class="dcname">Jackpot</div>
+            <div class="dcpct jp">0.02%</div>
+            <div class="dcsub">Full pot to wallet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page hidden profile-page" id="profile-page">
+    <div class="ambient"></div>
+    <nav class="prof-nav">
+      <div class="back-btn" onclick="goHome()">&#8592; &nbsp;Back</div>
+      <div class="logo" style="margin-left:auto;cursor:default;">adpot<em>.gg</em></div>
+    </nav>
+
+    <div class="prof-body">
+      <div class="prof-header">
+        <div class="prof-av">SL</div>
+        <div>
+          <div class="prof-name">slugmaster</div>
+          <div class="prof-tag">Discord Member &nbsp;·&nbsp; LVL 18</div>
+        </div>
+      </div>
+
+      <div class="prof-grid">
+        <div class="prof-card">
+          <div class="prof-card-val purple">142</div>
+          <div class="prof-card-lbl">Total Spins</div>
+        </div>
+        <div class="prof-card">
+          <div class="prof-card-val gold">3.24 SOL</div>
+          <div class="prof-card-lbl">Total Won</div>
+        </div>
+        <div class="prof-card">
+          <div class="prof-card-val">24</div>
+          <div class="prof-card-lbl">Referrals</div>
+          <div class="prof-card-sub">+24 bonus spins earned</div>
+        </div>
+        <div class="prof-card">
+          <div class="prof-card-val" style="font-size:20px;margin-top:4px;">8xJ...92K</div>
+          <div class="prof-card-lbl">Wallet</div>
+        </div>
+      </div>
+
+      <div class="prof-section-label">Daily Streak</div>
+      <div class="streak-row" style="margin-bottom:20px;">
+        <span class="streak-label">&#128293; 12 days</span>
+        <div class="streak-bar-wrap"><div class="streak-bar" id="streak-bar" style="width:0%"></div></div>
+        <span style="font-size:9px;color:rgba(161,161,170,.3);white-space:nowrap;">30 day goal</span>
+      </div>
+
+      <div class="prof-section-label">Referral Link</div>
+      <div class="ref-box" onclick="copyRef2()">
+        <span class="ref-url">adpot.gg/ref/slugmaster</span>
+        <span class="ref-copy" id="copy2lbl">COPY</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var homePage = document.getElementById('home-page');
+var profilePage = document.getElementById('profile-page');
+var track = document.getElementById('track');
+var sbtn = document.getElementById('sbtn');
+var resultEl = document.getElementById('result');
+var potEl = document.getElementById('pot');
+var cdEl = document.getElementById('cd');
+var shint = document.getElementById('shint');
+
+function goProfile() {
+  homePage.classList.remove('visible');
+  homePage.classList.add('hidden');
+  profilePage.classList.remove('hidden');
+  profilePage.classList.add('visible');
+  setTimeout(function() {
+    document.getElementById('streak-bar').style.width = '40%';
+  }, 100);
+}
+
+function goHome() {
+  profilePage.classList.remove('visible');
+  profilePage.classList.add('hidden');
+  homePage.classList.remove('hidden');
+  homePage.classList.add('visible');
+}
+
+var IW = 104;
+var N = 22;
+var rx = 0;
+var spinning = false;
+var hasSpun = false;
+var raf = null;
+
+function idle() {
+  if (spinning) return;
+  rx -= 0.28;
+  var wrap = IW * N;
+  if (rx <= -(wrap / 2)) rx += wrap / 2;
+  track.style.transform = 'translateX(' + rx + 'px)';
+  raf = requestAnimationFrame(idle);
+}
+idle();
+
+function doSpin() {
+  if (spinning || hasSpun) return;
+  spinning = true;
+  sbtn.disabled = true;
+  resultEl.className = 'result';
+  if (raf) cancelAnimationFrame(raf);
+
+  var win = Math.random() < 0.0002;
+  var x0 = rx;
+  var dist = IW * 42 + (win ? IW * 2 : 0) + Math.floor(Math.random() * IW * 2);
+  var dur = 3200;
+  var t0 = null;
+
+  function ease(t) { return 1 - Math.pow(1 - t, 4.5); }
+  function anim(ts) {
+    if (!t0) t0 = ts;
+    var p = Math.min((ts - t0) / dur, 1);
+    rx = x0 - dist * ease(p);
+    track.style.transform = 'translateX(' + rx + 'px)';
+    if (p < 1) { requestAnimationFrame(anim); }
+    else { spinning = false; hasSpun = true; showResult(win); idle(); }
+  }
+  requestAnimationFrame(anim);
+}
+
+function showResult(win) {
+  if (win) {
+    resultEl.textContent = 'JACKPOT — POT WON';
+    resultEl.className = 'result win';
+    sbtn.textContent = 'Resetting pot...';
+    setTimeout(function() {
+      hasSpun = false; spinning = false;
+      basePot = 0;
+      potEl.textContent = '$0';
+      resultEl.className = 'result';
+      sbtn.textContent = 'Watch Ad to Spin';
+      sbtn.disabled = false;
+      shint.textContent = '1 spin available today';
+    }, 4000);
+  } else {
+    resultEl.textContent = 'TNT — Better luck tomorrow';
+    resultEl.className = 'result lose';
+    sbtn.textContent = 'Come back tomorrow';
+    shint.textContent = 'Next spin in 24h';
+  }
+}
+
+function copyRef2() {
+  document.getElementById('copy2lbl').textContent = 'COPIED';
+  setTimeout(function() { document.getElementById('copy2lbl').textContent = 'COPY'; }, 2000);
+}
+
+var DAY_MS = 24 * 60 * 60 * 1000;
+var DAY_ADD = 10;
+var startTime = Date.now();
+var startPot = 0;
+var basePot = 0;
+
+function updatePot() {
+  var elapsed = Date.now() - startTime;
+  var daysElapsed = elapsed / DAY_MS;
+  basePot = startPot + daysElapsed * DAY_ADD;
+  potEl.textContent = '$' + basePot.toFixed(2);
+}
+updatePot();
+setInterval(updatePot, 1000);
+
+var totalSecs = 24 * 3600 - 1;
+var elapsedSecs = 0;
+setInterval(function() {
+  elapsedSecs++;
+  var rem = Math.max(totalSecs - elapsedSecs, 0);
+  var h = Math.floor(rem / 3600);
+  var m = Math.floor((rem % 3600) / 60);
+  var s = rem % 60;
+  cdEl.textContent = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+}, 1000);
+</script>
