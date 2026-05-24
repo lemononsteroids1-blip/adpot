@@ -295,7 +295,7 @@ function doSpin() {
 
 function showResult(win) {
   if (win) {
-    resultEl.textContent = 'JACKPOT — POT WON';
+    resultEl.textContent = 'JACKPOT POT WON';
     resultEl.className = 'result win';
     sbtn.textContent = 'Resetting pot...';
     setTimeout(function() {
@@ -308,7 +308,7 @@ function showResult(win) {
       shint.textContent = '1 spin available today';
     }, 4000);
   } else {
-    resultEl.textContent = 'TNT — Better luck tomorrow';
+    resultEl.textContent = 'TNT Better luck tomorrow';
     resultEl.className = 'result lose';
     sbtn.textContent = 'Come back tomorrow';
     shint.textContent = 'Next spin in 24h';
